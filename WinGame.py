@@ -5,14 +5,9 @@ from time import sleep
 import pygame
 import pygame_menu
 from pygame_menu import themes
+
+import GameMenus
 import RuntimeData
-
-
-
-(numpass,numfail) = pygame.init()
-if (numpass <= 0 or numfail > 0):
-    pygame.quit()
-    exit()
 
 def run():
     init()
@@ -36,23 +31,33 @@ def render():
 
 
 
-
-# Form screen with 400x400 size
-# with not resizable
-displays = pygame.display.get_num_displays()
-screen = pygame.display.set_mode((400, 400), pygame.RESIZABLE, display=displays-1)
-RuntimeData.GLOBAL_runtime_data.screen = screen
-
 # set title
 pygame.display.set_caption('Not resizable')
 
 # run window
 running = True
 while running:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
+        if event.type == RuntimeData.GLOBAL_runtime_data.Menus.update_loading:
+            progress = RuntimeData.GLOBAL_runtime_data.Menus.loading.get_widget("1")
+            progress.set_value(progress.get_value() + 1)
+            if progress.get_value() == 100:
+                pygame.time.set_timer(RuntimeData.GLOBAL_runtime_data.Menus.update_loading, 0)
+
         if event.type == pygame.QUIT:
             running = False
             continue
+
+    if RuntimeData.GLOBAL_runtime_data.Menus.mainmenu.is_enabled():
+        RuntimeData.GLOBAL_runtime_data.Menus.mainmenu.update(events)
+        RuntimeData.GLOBAL_runtime_data.Menus.mainmenu.draw(RuntimeData.GLOBAL_runtime_data.screen)
+        if (RuntimeData.GLOBAL_runtime_data.Menus.mainmenu.get_current().get_selected_widget()):
+            RuntimeData.GLOBAL_runtime_data.Menus.arrow.draw(
+                RuntimeData.GLOBAL_runtime_data.screen, 
+                RuntimeData.GLOBAL_runtime_data.Menus.mainmenu.get_current().get_selected_widget())
+    
+        pygame.display.update()
 
         if event.type == pygame.MOUSEMOTION:
             continue
