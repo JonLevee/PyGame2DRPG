@@ -3,11 +3,18 @@ global GLOBAL_runtime_data
 
 from time import sleep
 import pygame
-import pygame_menu
-from pygame_menu import themes
 
 import GameMenus
 import RuntimeData
+
+(numpass,numfail) = pygame.init()
+if (numpass <= 0 or numfail > 0):
+    pygame.quit()
+    exit()
+
+# Form resizable screen on last display
+display_index = pygame.display.get_num_displays()-1
+screen = pygame.display.set_mode((400, 400), pygame.RESIZABLE, display=display_index)
 
 def run():
     init()
@@ -32,14 +39,14 @@ def render():
 
 
 # set title
-pygame.display.set_caption('Not resizable')
+pygame.display.set_caption('resizable')
 
 # run window
 running = True
 while running:
     events = pygame.event.get()
     for event in events:
-        if event.type == RuntimeData.GLOBAL_runtime_data.Menus.update_loading:
+        if event.type == GameMenus.EVENT_UPDATE_LOADING:
             progress = RuntimeData.GLOBAL_runtime_data.Menus.loading.get_widget("1")
             progress.set_value(progress.get_value() + 1)
             if progress.get_value() == 100:

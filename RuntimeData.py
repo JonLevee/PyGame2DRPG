@@ -3,20 +3,13 @@ import GameMenus
 
 class RuntimeData:
     """Class for storing runtime data."""
-    def __init__(self, screen):
+    def __init__(self):
         self.user_name = ""
-        self.screen = screen
-        self.Menus = GameMenus.GameMenus()
+        self.menu = NotImplemented
 
-(numpass,numfail) = pygame.init()
-if (numpass <= 0 or numfail > 0):
-    pygame.quit()
-    exit()
+    def set_menu(self, menu):
+        self.menu = menu
 
-# Form screen with 400x400 size
-# with not resizable
-displays = pygame.display.get_num_displays()
-screen = pygame.display.set_mode((400, 400), pygame.RESIZABLE, display=displays-1)
 
 # create global instance
-GLOBAL_runtime_data = RuntimeData(screen)
+GLOBAL_runtime_data = RuntimeData()
